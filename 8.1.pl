@@ -55,3 +55,19 @@ daughter(_).
 % Предикаты для мужа
 husband(X, Y) :- man(X), parent(X, Z), parent(Y, Z), X \= Y.
 husband(X) :- husband(Y, X), write(Y).
+
+grand_ma(X, Y) :- woman(X), parent(X, Z), parent(Z, Y).
+grand_mas(X) :- grand_ma(Y, X), write(Y), nl, fail.
+grand_mas(_).
+
+grand_ma_and_da(X, Y) :- 
+    (grand_ma(X, Y), woman(Y));
+    (grand_ma(Y, X), woman(X)).
+
+aunt(X, Y) :- 
+    woman(X),
+    (sister(X, Z), parent(Z, Y));
+    (wife(X, Z), brother(Z, W), parent(W, Y)).
+
+aunts(X) :- aunt(Y, X), write(Y), nl, fail.
+aunts(_).
