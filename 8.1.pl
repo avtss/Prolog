@@ -47,3 +47,11 @@ b_s(X, Y) :- parent(Z, X), parent(Z, Y).
 b_s(X) :- 
     setof(Y, (b_s(Y, X), Y\=X), BS),
     write(BS), nl.
+
+daughter(X, Y) :- woman(X), parent(Y, X).
+daughter(X) :- daughter(Y, X), write(Y), nl, fail.
+daughter(_).
+
+% Предикаты для мужа
+husband(X, Y) :- man(X), parent(X, Z), parent(Y, Z), X \= Y.
+husband(X) :- husband(Y, X), write(Y).
