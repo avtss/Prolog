@@ -1,3 +1,17 @@
+:- dynamic high/2.
+
+read_str(A):-get0(X),r_str(X,A,[]).
+r_str(10,A,A):-!.
+r_str(X,A,B):-append(B,[X],B1),get0(X1),r_str(X1,A,B1).
+high_r(X,Y):- repeat, (high(X,Y) -> (put(32),write(X),nl,write(Y),write("."),nl,
+                retract(high(X,Y))) ;X=nil,Y=nil).
+pr2:-tell('c:/Prolog/car_brands.txt'),high_r(X,_),X=nil,told.
+pr3:-see('c:/Prolog/car_brands.txt'),get0(Sym),read_high(Sym),seen.
+read_high(-1):-!.
+read_high(_):- read_str(Lang),name(X,Lang),read(Y),asserta(high(X,Y)),
+                get0(Sym),read_high(Sym).
+
+% База знаний автомобильных брендов
 country(toyota,2).     % 1-Германия 2-Япония 3-США 4-Италия 5-Франция 6-Корея 0-Другая
 country(bmw,1).
 country(mercedes,1).
@@ -127,3 +141,47 @@ market(mclaren,4).
 market(volvo,1).
 market(jaguar,4).
 market(land_rover,4).
+
+question1(X1):- write("What is the brand's country of origin?"),nl,
+                write("1. Germany"),nl,
+                write("2. Japan"),nl,
+                write("3. USA"),nl,
+                write("4. Italy"),nl,
+                write("5. France"),nl,
+                write("6. South Korea"),nl,
+                write("0. Other"),nl,
+                read(X1).
+
+question2(X2):- write("What is the brand's vehicle class?"),nl,
+                write("1. Budget"),nl,
+                write("2. Mid-range"),nl,
+                write("3. Premium"),nl,
+                write("4. Sports"),nl,
+                write("5. Luxury"),nl,
+                read(X2).
+
+question3(X3):- write("What is the primary engine type?"),nl,
+                write("1. Gasoline"),nl,
+                write("2. Diesel"),nl,
+                write("3. Electric"),nl,
+                write("4. Hybrid"),nl,
+                write("0. Various"),nl,
+                read(X3).
+
+question4(X4):- write("Does the brand have racing history?"),nl,
+                write("1. Yes"),nl,
+                write("0. No"),nl,
+                read(X4).
+
+question5(X5):- write("What is the brand's main market?"),nl,
+                write("1. Europe"),nl,
+                write("2. USA"),nl,
+                write("3. Asia"),nl,
+                write("4. Global"),nl,
+                read(X5).
+
+pr:- question1(X1), question2(X2), question3(X3), question4(X4), question5(X5),
+     high(X,X1), class(X,X2), engine(X,X3), racing(X,X4), market(X,X5),
+     write("Это: "), write(X), nl.
+
+pr:- write("Couldn't identify your brand."), nl.
