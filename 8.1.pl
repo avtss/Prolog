@@ -1,27 +1,27 @@
-man(ivan).
-man(petr).
-man(alexey).
-man(sergey).
-man(dmitriy).
+man(anatoliy).
+man(dimitriy).
+man(vlad).
+man(kirill).
+man(mefodiy).
 
-woman(maria).
-woman(olga).
-woman(anna).
-woman(ekaterina).
-woman(natalia).
+woman(vladina).
+woman(galya).
+woman(sveta).
+woman(zoya).
+woman(katrin).
 
-parent(ivan, petr).
-parent(ivan, olga).
-parent(maria, petr).
-parent(maria, olga).
-parent(petr, alexey).
-parent(petr, anna).
-parent(ekaterina, alexey).
-parent(ekaterina, anna).
-parent(sergey, dmitriy).
-parent(sergey, natalia).
-parent(olga, dmitriy).
-parent(olga, natalia).
+dite(dimitriy, anatoliy).
+dite(dimitriy, galya).
+dite(vladina, anatoliy).
+dite(vladina, galya).
+dite(kirill, dimitriy).
+dite(mefodiy, dimitriy).
+dite(kirill, sveta).
+dite(mefodiy, sveta).
+dite(zoya, vlad).
+dite(zoya, vladina).
+dite(katrin, vlad).
+dite(katrin, vladina).
 
 men :- man(X), write(X), nl, fail.
 men.
@@ -29,34 +29,34 @@ men.
 women :- woman(X), write(X), nl, fail.
 women.
 
-children(X) :- parent(X, Y), write(Y), nl, fail.
+children(X) :- dite(Y, X), write(Y), nl, fail.
 children(X).
 
-mother(X, Y) :- woman(X), parent(X, Y).
+mother(X, Y) :- woman(X), dite(Y, X).
 
-mother(X) :- parent(Y, X), woman(Y), write(Y), nl.
+mother(X) :- dite(X, Y), woman(Y), write(Y), nl.
 
-brother(X, Y) :- man(X), X \= Y, parent(P, X), parent(P, Y), !.   
+brother(X, Y) :- man(X), X \= Y, dite(X, P), dite(Y, P), !.   
 
 brothers(X) :-
     setof(B, brother(B, X), Brothers),
     write(Brothers), nl.
 
-b_s(X, Y) :- parent(Z, X), parent(Z, Y).
+b_s(X, Y) :- dite(X, Z), dite(Y, Z).
 
 b_s(X) :- 
     setof(Y, (b_s(Y, X), Y\=X), BS),
     write(BS), nl.
 
-daughter(X, Y) :- woman(X), parent(Y, X).
+daughter(X, Y) :- woman(X), dite(X, Y).
 daughter(X) :- daughter(Y, X), write(Y), nl, fail.
 daughter(_).
 
 % Предикаты для мужа
-husband(X, Y) :- man(X), parent(X, Z), parent(Y, Z), X \= Y.
+husband(X, Y) :- man(X), dite(Z, X), dite(Z, Y), X \= Y.
 husband(X) :- husband(Y, X), write(Y).
 
-grand_ma(X, Y) :- woman(X), parent(X, Z), parent(Z, Y).
+grand_ma(X, Y) :- woman(X), dite(Z, X), dite(Y, Z).
 grand_mas(X) :- grand_ma(Y, X), write(Y), nl, fail.
 grand_mas(_).
 
@@ -66,8 +66,8 @@ grand_ma_and_da(X, Y) :-
 
 aunt(X, Y) :- 
     woman(X),
-    (sister(X, Z), parent(Z, Y));
-    (wife(X, Z), brother(Z, W), parent(W, Y)).
+    (sister(X, Z), dite(Y, Z));
+    (wife(X, Z), brother(Z, W), dite(Y, W)).
 
 aunts(X) :- aunt(Y, X), write(Y), nl, fail.
 aunts(_).
