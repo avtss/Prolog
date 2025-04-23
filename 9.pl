@@ -98,3 +98,60 @@ count_divisors(N, D, Max, Acc, Count) :-
     N mod D =\= 0,
     D1 is D + 1,
     count_divisors(N, D1, Max, Acc, Count).
+
+reverse_between_min_max(List, Result) :-
+    find_min_max_pos(List, MinPos, MaxPos),
+    (MinPos < MaxPos ->
+        reverse_between(List, MinPos+1, MaxPos-1, Result)
+    ;
+        reverse_between(List, MaxPos+1, MinPos-1, Result)
+    ).
+
+%Переставить элементы между минимальным и максимальным в обратном порядке
+find_min_max_pos(List, MinPos, MaxPos) :-
+    nth0(MinPos, List, Min),
+    nth0(MaxPos, List, Max),
+    \+ (nth0(P, List, X), X < Min),
+    \+ (nth0(P, List, X), X > Max).
+
+reverse_between(List, Start, End, Result) :-
+    length(List, L),
+    Start >= 0, End < L, Start =< End,
+    split_list(List, Start, End, Before, Middle, After),
+    reverse(Middle, Reversed),
+    append(Before, Reversed, Temp),
+    append(Temp, After, Result).
+
+split_list(List, Start, End, Before, Middle, After) :-
+    length(Before, Start),
+    append(Before, Rest, List),
+    MiddleLength is End - Start + 1,
+    length(Middle, MiddleLength),
+    append(Middle, After, Rest).
+
+%найти два максимальных элемента
+find_two_max(List, Max1, Max2) :-
+    List = [H|T],
+    find_two_max(T, H, -infinity, Max1, Max2).
+
+find_two_max([], Max1, Max2, Max1, Max2).
+find_two_max([H|T], Max1, Max2, FinalMax1, FinalMax2) :-
+    (H > Max1 ->
+        NewMax2 is Max1,
+        NewMax1 is H
+    ; H > Max2 ->
+        NewMax1 is Max1,
+        NewMax2 is H
+    ;
+        NewMax1 is Max1,
+        NewMax2 is Max2
+    ),
+    find_two_max(T, NewMax1, NewMax2, FinalMax1, FinalMax2).
+%максимальный нечетный
+max_odd(List, MaxOdd) :-
+    include(odd, List, Odds),
+    Odds \= [],
+    max_list(Odds, MaxOdd).
+max_odd(_, -1) :- !. % если нет нечетных
+
+odd(N) :- N mod 2 =:= 1.
