@@ -56,3 +56,45 @@ w_list([H|T]) :- write(H), nl, w_list(T).
 
 my_ap([], Y, Y).
 my_ap([H|T], Y, [H|T1]) :- my_ap(T, Y, T1).
+
+min_digit(N, Min) :-
+    N > 0,
+    min_digit(N, 9, Min).
+
+min_digit(0, Min, Min).
+min_digit(N, CurrentMin, Min) :-
+    N > 0,
+    Digit is N mod 10,
+    NewMin is min(Digit, CurrentMin),
+    Next is N // 10,
+    min_digit(Next, NewMin, Min).
+
+count_digits_less_3(N, Count) :-
+    N >= 0,
+    count_digits_less_3(N, 0, Count).
+
+count_digits_less_3(0, Acc, Acc).
+count_digits_less_3(N, Acc, Count) :-
+    N > 0,
+    Digit is N mod 10,
+    (Digit < 3 -> NewAcc is Acc + 1; NewAcc is Acc),
+    Next is N // 10,
+    count_digits_less_3(Next, NewAcc, Count).
+
+count_divisors(N, Count) :-
+    N > 0,
+    Max is floor(sqrt(N)),
+    count_divisors(N, 1, Max, 0, Count).
+
+count_divisors(N, D, Max, Acc, Count) :-
+    D > Max, !,
+    Count is Acc * 2.
+count_divisors(N, D, Max, Acc, Count) :-
+    N mod D =:= 0,
+    (D =:= N div D -> NewAcc is Acc + 1; NewAcc is Acc + 2),
+    D1 is D + 1,
+    count_divisors(N, D1, Max, NewAcc, Count).
+count_divisors(N, D, Max, Acc, Count) :-
+    N mod D =\= 0,
+    D1 is D + 1,
+    count_divisors(N, D1, Max, Acc, Count).
