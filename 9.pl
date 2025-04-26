@@ -155,3 +155,47 @@ max_odd(List, MaxOdd) :-
 max_odd(_, -1) :- !. % если нет нечетных
 
 odd(N) :- N mod 2 =:= 1.
+
+solution :-
+    % Создаем список из трех друзей с их атрибутами
+    Friends = [
+        friend(_, Position1, Nationality1, Sport1),
+        friend(_, Position2, Nationality2, Sport2),
+        friend(_, Position3, Nationality3, Sport3)
+    ],
+    
+    % Убедимся, что все позиции разные (1, 2, 3)
+    permutation([Position1, Position2, Position3], [1, 2, 3]),
+    
+    % Все имена разные
+    permutation([Name1, Name2, Name3], [michael, simon, richard]),
+    
+    % Все национальности разные
+    permutation([Nationality1, Nationality2, Nationality3], [american, israeli, australian]),
+    
+    % Все виды спорта разные
+    permutation([Sport1, Sport2, Sport3], [basketball, tennis, cricket]),
+    
+    % Заполняем атрибуты друзей
+    member(friend(michael, MichaelPos, MichaelNat, basketball), Friends),
+    member(friend(simon, SimonPos, israeli, SimonSport), Friends),
+    member(friend(richard, RichardPos, RichardNat, RichardSport), Friends),
+    
+    % Условия из задачи:
+    % 1. Игрок в крикет занял первое место
+    member(friend(_, 1, _, cricket), Friends),
+    
+    % 2. Майкл играет лучше, чем американец (его позиция выше)
+    member(friend(_, AmericanPos, american, _), Friends),
+    MichaelPos < AmericanPos,
+    
+    % 3. Израильтянин Саймон играет лучше теннисиста
+    member(friend(_, TennisPos, _, tennis), Friends),
+    SimonPos < TennisPos,
+    
+    % Находим ответы на вопросы
+    member(friend(Australian, _, australian, _), Friends),
+    
+    % Выводим результаты
+    format('Australian: ~w~n', [Australian]),
+    format('Richard sport: ~w~n', [RichardSport]).
